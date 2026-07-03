@@ -1,0 +1,11 @@
+{:itonami.blueprint/id "cloud-itonami-7120"
+ :itonami.blueprint/name "Technical testing and analysis"
+ :itonami.blueprint/isic-rev5 "7120"
+ :itonami.blueprint/domain :professional/technical-testing
+ :itonami.blueprint/license "AGPL-3.0-or-later"
+ :itonami.blueprint/social-impact [:professional-standards :data-sovereignty :transparency]
+ :itonami.blueprint/governor :test-integrity-governor
+ :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger]
+ :itonami.blueprint/optional-technologies []
+ :itonami.blueprint/status :public-oss
+ :itonami.blueprint/robotics true}
