@@ -1,4 +1,4 @@
-{:itonami.blueprint/id "cloud-itonami-7120"
+{:itonami.blueprint/id "cloud-itonami-isic-7120"
  :itonami.blueprint/name "Technical testing and analysis"
  :itonami.blueprint/isic-rev5 "7120"
  :itonami.blueprint/domain :professional/technical-testing

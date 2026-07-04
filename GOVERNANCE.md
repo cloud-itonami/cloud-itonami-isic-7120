@@ -1,6 +1,6 @@
 # Governance
 
-`cloud-itonami-7120` is an OSS open-business blueprint for technical testing and analysis -- physical, chemical and other testing of materials/products, and certification/inspection services.
+`cloud-itonami-isic-7120` is an OSS open-business blueprint for technical testing and analysis -- physical, chemical and other testing of materials/products, and certification/inspection services.
 Governance covers both the capability layer and the operator model.
 
 ## Maintainers

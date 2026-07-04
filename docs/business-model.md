@@ -2,7 +2,7 @@
 
 ## Classification
 
-- Repository: `cloud-itonami-7120`
+- Repository: `cloud-itonami-isic-7120`
 - ISIC Rev.5: `7120`
 - Activity: technical testing and analysis -- physical, chemical and other testing of materials/products, and certification/inspection services
 - Social impact: professional standards, data sovereignty, transparent audit

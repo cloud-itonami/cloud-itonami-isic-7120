@@ -1,4 +1,4 @@
-# cloud-itonami-7120
+# cloud-itonami-isic-7120
 
 Open Business Blueprint for **ISIC Rev.5 7120**: Technical testing and analysis.
 
