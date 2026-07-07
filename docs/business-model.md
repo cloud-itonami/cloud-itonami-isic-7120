@@ -31,6 +31,13 @@
 ## Trust Controls
 
 - no test result or certification is issued without human sign-off
-- a fabricated test-protocol citation forces a hold, not an override
-- every certification path is auditable
+- a fabricated jurisdiction accreditation/certification-standard
+  citation, incomplete accreditation evidence, a measured value outside
+  its own test protocol's tolerance range, or a stale instrument
+  calibration -- each forces a hold, not an override
+- an engagement cannot be certified twice: a double-certification
+  attempt is held off this actor's own engagement facts alone, with no
+  upstream comparison needed
+- every intake, assessment, screening and certification path is
+  auditable
 - emergency manual override paths remain outside LLM control
