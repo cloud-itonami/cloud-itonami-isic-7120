@@ -29,10 +29,9 @@
   whom' is always a query over an immutable log -- the audit trail a
   client trusting a laboratory needs, and the evidence an operator
   needs if a certification is later disputed."
-  (:require #?(:clj  [clojure.edn :as edn]
-               :cljs [cljs.reader :as edn])
-            [testlab.registry :as registry]
-            [langchain.db :as d]))
+  (:require [testlab.registry :as registry]
+            [langchain.db :as d]
+            [langchain-store.core :as ls]))
 
 (defprotocol Store
   (engagement [s id])
@@ -138,16 +137,13 @@
   Map/compound values (assessment/calibration payloads, ledger facts,
   certification records) are stored as EDN strings so `langchain.db`
   doesn't expand them into sub-entities -- the same convention every
-  sibling actor's store uses."
-  {:engagement/id               {:db/unique :db.unique/identity}
-   :assessment/engagement-id    {:db/unique :db.unique/identity}
-   :calibration/engagement-id   {:db/unique :db.unique/identity}
-   :ledger/seq                  {:db/unique :db.unique/identity}
-   :certification/seq           {:db/unique :db.unique/identity}
-   :sequence/jurisdiction       {:db/unique :db.unique/identity}})
-
-(defn- enc [v] (pr-str v))
-(defn- dec* [s] (when s (edn/read-string s)))
+  sibling actor's store uses. The identity-schema builder, EDN-blob
+  codec and seq-keyed event-log read/append are the shared
+  kotoba-lang/langchain-store machinery (ADR-2607141600) -- the seam
+  ~190 actors hand-roll; this store keeps only its domain wiring."
+  (ls/identity-schema
+   [:engagement/id :assessment/engagement-id :calibration/engagement-id
+    :ledger/seq :certification/seq :sequence/jurisdiction]))
 
 (defn- engagement->tx [{:keys [id client sample-description test-protocol measured-value protocol-min protocol-max
                               calibration-current? certified? jurisdiction status certification-number]}]
@@ -189,21 +185,15 @@
          (map #(pull->engagement (d/pull (d/db conn) engagement-pull [:engagement/id %])))
          (sort-by :id)))
   (calibration-of [_ id]
-    (dec* (d/q '[:find ?p . :in $ ?eid
+    (ls/dec* (d/q '[:find ?p . :in $ ?eid
                 :where [?k :calibration/engagement-id ?eid] [?k :calibration/payload ?p]]
               (d/db conn) id)))
   (assessment-of [_ engagement-id]
-    (dec* (d/q '[:find ?p . :in $ ?eid
+    (ls/dec* (d/q '[:find ?p . :in $ ?eid
                 :where [?a :assessment/engagement-id ?eid] [?a :assessment/payload ?p]]
               (d/db conn) engagement-id)))
-  (ledger [_]
-    (->> (d/q '[:find ?s ?f :where [?e :ledger/seq ?s] [?e :ledger/fact ?f]] (d/db conn))
-         (sort-by first)
-         (mapv (comp dec* second))))
-  (certification-history [_]
-    (->> (d/q '[:find ?s ?r :where [?e :certification/seq ?s] [?e :certification/record ?r]] (d/db conn))
-         (sort-by first)
-         (mapv (comp dec* second))))
+  (ledger [_] (ls/read-stream conn :ledger/seq :ledger/fact))
+  (certification-history [_] (ls/read-stream conn :certification/seq :certification/record))
   (next-sequence [_ jurisdiction]
     (or (d/q '[:find ?n . :in $ ?j
               :where [?e :sequence/jurisdiction ?j] [?e :sequence/next ?n]]
@@ -217,10 +207,10 @@
       (d/transact! conn [(engagement->tx value)])
 
       :assessment/set
-      (d/transact! conn [{:assessment/engagement-id (first path) :assessment/payload (enc payload)}])
+      (d/transact! conn [{:assessment/engagement-id (first path) :assessment/payload (ls/enc payload)}])
 
       :calibration/set
-      (d/transact! conn [{:calibration/engagement-id (first path) :calibration/payload (enc payload)}])
+      (d/transact! conn [{:calibration/engagement-id (first path) :calibration/payload (ls/enc payload)}])
 
       :engagement/mark-certified
       (let [engagement-id (first path)
@@ -230,12 +220,12 @@
         (d/transact! conn
                      [(engagement->tx (assoc engagement-patch :id engagement-id))
                       {:sequence/jurisdiction jurisdiction :sequence/next next-n}
-                      {:certification/seq (count (certification-history s)) :certification/record (enc (get result "record"))}])
+                      {:certification/seq (count (certification-history s)) :certification/record (ls/enc (get result "record"))}])
         result)
       nil)
     s)
   (append-ledger! [s fact]
-    (d/transact! conn [{:ledger/seq (count (ledger s)) :ledger/fact (enc fact)}])
+    (ls/append-blob! conn :ledger/seq :ledger/fact (count (ledger s)) fact)
     fact)
   (with-engagements [s engagements]
     (when (seq engagements) (d/transact! conn (mapv engagement->tx (vals engagements)))) s))
