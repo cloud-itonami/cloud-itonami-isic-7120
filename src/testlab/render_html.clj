@@ -3,7 +3,8 @@
   Closes flagship checklist item 2 (com-junkawasaki/root ADR-2607189300).
   Drives the REAL actor stack (testlab.operation -> testlab.governor -> testlab.store).
   No invented numbers, no timestamps, byte-identical across reruns."
-  (:require [clojure.string :as str]
+  (:require [jp-go-dds.skin]
+            [clojure.string :as str]
             [testlab.store :as store]
             [testlab.operation :as op]
             [testlab.phase :as phase]
@@ -232,7 +233,9 @@ code { font-size: 12px; background: #f4f4f4; padding: 1px 4px; border-radius: 3p
    "<!doctype html>\n"
    "<html lang=\"ja\">\n<head>\n<meta charset=\"utf-8\">\n"
    "<title>testlab.render-html -- Test Integrity Governor operator console</title>\n"
-   "<style>\n" css "\n</style>\n"
+   "<style>"
+   (jp-go-dds.skin/dds+skin)
+   "</style>\n"
    "</head>\n<body>\n"
    "<header class=\"bar\"><h1>Test Integrity Governor -- Operator Console</h1>"
    "<span class=\"badge\">ISIC 7120 &middot; phase " phase/default-phase " (" (:label (get phase/phases phase/default-phase)) ")</span>"
