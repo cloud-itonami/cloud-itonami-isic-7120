@@ -4,7 +4,7 @@
   Drives the REAL actor stack (testlab.operation -> testlab.governor -> testlab.store).
   No invented numbers, no timestamps, byte-identical across reruns."
   (:require [jp-go-dds.skin]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [testlab.store :as store]
             [testlab.operation :as op]
             [testlab.phase :as phase]

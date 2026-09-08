@@ -26,7 +26,7 @@
   RECORD a laboratory would keep, not the act of issuing the
   certification itself (that is `testlab.operation`'s `:certification/
   issue`, always human-gated -- see README `Actuation`)."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 (defn- unsigned-certificate
   "Every certificate this actor produces is UNSIGNED -- signature is the
@@ -72,7 +72,7 @@
     (throw (ex-info "certification: jurisdiction required" {})))
   (when (< sequence 0)
     (throw (ex-info "certification: sequence must be >= 0" {})))
-  (let [cert-number (str (str/upper-case jurisdiction) "-CERT-" (zero-pad sequence 6))
+  (let [cert-number (str (str/upper jurisdiction) "-CERT-" (zero-pad sequence 6))
         record {"record_id" cert-number
                 "kind" "certification-draft"
                 "engagement_id" engagement-id
