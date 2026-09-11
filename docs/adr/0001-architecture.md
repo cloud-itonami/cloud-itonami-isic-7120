@@ -133,7 +133,7 @@ clean on the first run -- the `already-certified-violations` design
 (Decision 6) and the `out-of-tolerance-violations` pure-recompute shape
 (Decision 3) were both DELIBERATELY informed by prior builds' lessons
 before writing any code, rather than discovered as bugs after the
-fact. The demo (`clojure -M:dev:run`) was still independently verified
+fact. The demo (`kbb -M:dev:run`) was still independently verified
 against the printed audit ledger -- basis tags `:no-spec-basis` ·
 `:out-of-tolerance` (both a below-minimum and an above-maximum case) ·
 `:calibration-not-current` · `:already-certified` all appear exactly

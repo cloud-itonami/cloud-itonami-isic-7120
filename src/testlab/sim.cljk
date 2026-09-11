@@ -1,5 +1,5 @@
 (ns testlab.sim
-  "Demo driver -- `clojure -M:dev:run`. Walks a clean engagement through
+  "Demo driver -- `kbb -M:dev:run`. Walks a clean engagement through
   intake -> jurisdiction accreditation assessment -> calibration
   screening -> certification-issuance proposal (always escalates) ->
   human approval -> commit, then shows five HARD holds (a jurisdiction
