@@ -148,7 +148,7 @@ fleet so far, applied here and finding nothing to fix.
   actor treatment as the twelve prior actors, extending the pattern to
   a genuinely different domain (ISIC division 71) for the first time.
 - (+) The actuation invariant (governor + phase, two layers) is
-  regression-tested by `test/testlab/phase_test.clj`'s
+  regression-tested by `test/testlab/phase_test.cljk`'s
   `certification-issue-never-auto-at-any-phase`.
 - (+) `MemStore` ‖ `DatomicStore` parity is proven by `test/testlab/
   store_contract_test.clj`, the same `:db-api`-driven swap pattern
