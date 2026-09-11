@@ -71,7 +71,7 @@ any phase, by construction.** Two independent layers enforce this
 (`testlab.governor`'s `:actuation/issue-certification` high-stakes
 gate and `testlab.phase`'s phase table, which never puts
 `:certification/issue` in any phase's `:auto` set) -- see
-`testlab.phase`'s docstring and `test/testlab/phase_test.clj`'s
+`testlab.phase`'s docstring and `test/testlab/phase_test.cljk`'s
 `certification-issue-never-auto-at-any-phase`. The actor may draft,
 check and recommend; a human laboratory director is always the one who
 actually issues a certification. Like `6511`/`6621`/`6629`/`6612`/
@@ -151,14 +151,14 @@ stack only -- no bespoke domain capability lib to reference at all.
 
 | File | Role |
 |---|---|
-| `src/testlab/store.cljc` | **Store** protocol -- `MemStore` ‖ `DatomicStore` (`langchain.db`) + append-only audit ledger + certification history. No dynamically-filed sub-record -- the actuation op acts directly on a pre-seeded engagement, and the double-certification guard checks a dedicated `:certified?` boolean rather than a `:status` value |
-| `src/testlab/registry.cljc` | Certification draft records, plus `within-tolerance?` -- the FIRST check in this fleet to combine a MINIMUM and a MAXIMUM bound in one comparison (a measured value must satisfy `protocol-min <= value <= protocol-max`) |
-| `src/testlab/facts.cljc` | Per-jurisdiction lab-accreditation/certification-standard catalog with an official spec-basis citation per entry, honest coverage reporting |
-| `src/testlab/testlabllm.cljc` | **TestLab-LLM Advisor** -- `mock-advisor` ‖ `llm-advisor`; intake/assessment/calibration-screening/certification-issuance proposals |
-| `src/testlab/governor.cljc` | **Test Integrity Governor** -- 4 HARD checks (spec-basis · evidence-incomplete · out-of-tolerance, pure ground-truth two-sided-range recompute · calibration-not-current, unconditional evaluation) + already-certified guard + 1 soft (confidence/actuation gate) |
-| `src/testlab/phase.cljc` | **Phase 0→3** -- read-only → assisted intake → assisted assess → supervised (certification always human; engagement intake is the ONLY auto-eligible op, no capital risk) |
-| `src/testlab/operation.cljc` | **OperationActor** -- langgraph-clj StateGraph |
-| `src/testlab/sim.cljc` | demo driver |
+| `src/testlab/store.cljk` | **Store** protocol -- `MemStore` ‖ `DatomicStore` (`langchain.db`) + append-only audit ledger + certification history. No dynamically-filed sub-record -- the actuation op acts directly on a pre-seeded engagement, and the double-certification guard checks a dedicated `:certified?` boolean rather than a `:status` value |
+| `src/testlab/registry.cljk` | Certification draft records, plus `within-tolerance?` -- the FIRST check in this fleet to combine a MINIMUM and a MAXIMUM bound in one comparison (a measured value must satisfy `protocol-min <= value <= protocol-max`) |
+| `src/testlab/facts.cljk` | Per-jurisdiction lab-accreditation/certification-standard catalog with an official spec-basis citation per entry, honest coverage reporting |
+| `src/testlab/testlabllm.cljk` | **TestLab-LLM Advisor** -- `mock-advisor` ‖ `llm-advisor`; intake/assessment/calibration-screening/certification-issuance proposals |
+| `src/testlab/governor.cljk` | **Test Integrity Governor** -- 4 HARD checks (spec-basis · evidence-incomplete · out-of-tolerance, pure ground-truth two-sided-range recompute · calibration-not-current, unconditional evaluation) + already-certified guard + 1 soft (confidence/actuation gate) |
+| `src/testlab/phase.cljk` | **Phase 0→3** -- read-only → assisted intake → assisted assess → supervised (certification always human; engagement intake is the ONLY auto-eligible op, no capital risk) |
+| `src/testlab/operation.cljk` | **OperationActor** -- langgraph-clj StateGraph |
+| `src/testlab/sim.cljk` | demo driver |
 | `test/testlab/*_test.clj` | governor contract · phase invariants · store parity · registry conformance · facts coverage |
 
 ## Business-process coverage (honest)
