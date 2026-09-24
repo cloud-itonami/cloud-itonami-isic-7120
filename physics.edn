@@ -1,0 +1,41 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; README "Robotics premise": a sample-handling and testing robot performs
+;; physical sample preparation and instrument operation (ISIC 7120, technical
+;; testing and analysis). Its physical work: loading tensile specimens into the
+;; universal testing machine and running the test, and soaking specimens in
+;; the conditioning furnace before an elevated-temperature test.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-7120"
+ :cases
+ [{:id :ss400-round-bar-tensile
+   :kind :material
+   :procedure "tensile test of a 10 mm diameter round specimen machined from SS400 plate; the lab reports whether the 0.2 % proof load meets the grade"
+   :params {:area-m2 7.854e-5 :length-m 0.05 :hardening-pa 1.0e9 :max-force-n 45000.0}
+   :sweep {:param :yield-stress-pa :values [220.0e6 240.0e6 245.0e6 270.0e6 310.0e6]}
+   :quantity :yield-force-n
+   :limit {:min 19242.0 :basis "JIS G 3101 SS400 (thickness <= 16 mm): minimum yield point 245 N/mm2, times the 78.54 mm2 specimen section"}
+   :boundary {:lo 200.0e6 :hi 330.0e6}}
+  {:id :specimen-into-utm-grips
+   :kind :manipulator
+   :procedure "arm lifts a specimen with its threaded grip adapters from the rack and places it between the UTM wedge grips"
+   :params {:l1-m 0.45 :l2-m 0.40 :m1-kg 3.5 :m2-kg 2.5
+            :from [0.50 0.05] :to [0.35 0.60] :duration-s 2.0 :steps 500}
+   :sweep {:param :payload-kg :values [0.5 1.5 3.0 5.0 8.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 60.0 :basis "estimate: continuous shoulder torque of a light collaborative arm (~5 kg class)"}
+   :boundary {:lo 0.1 :hi 20.0}}
+  {:id :specimen-furnace-soak
+   :kind :thermal
+   :procedure "steel specimen block in the conditioning furnace set to 400 C, heated from both faces; half the thickness is modelled (mid-plane symmetry) and the mid-plane must reach 397 C before the test starts"
+   :params {:conductivity-w-mk 45.0 :density-kg-m3 7850.0 :specific-heat-j-kgk 500.0
+            :t-hot-c 400.0 :h-front-w-m2k 40.0 :h-back-w-m2k 0.0
+            :threshold-c 397.0 :duration-s 14400.0 :nodes 6}
+   :sweep {:param :thickness-m :values [0.003 0.006 0.010 0.015 0.025]}
+   :quantity :time-to-threshold-s
+   :limit {:max 3600.0 :basis "estimate: one-hour soak slot per specimen in the furnace schedule; 3 K below set point as the ready criterion"}
+   :boundary {:lo 0.002 :hi 0.04}}]}
